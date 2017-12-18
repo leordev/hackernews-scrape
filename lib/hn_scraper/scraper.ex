@@ -17,7 +17,7 @@ defmodule HnScraper.Scraper do
   def get_page_details(url) do
     IO.puts(">>>> scraping url " <> url)
     try do
-      Scrape.website(url)
+      Scrape.article(url)
     rescue
       CaseClauseError -> nil
     end
@@ -31,7 +31,21 @@ defmodule HnScraper.Scraper do
 
   defp map_story(story_id) do
     raw_story = get_story(story_id)
-    Map.put_new(raw_story, "details", get_page_details(raw_story["url"]))
+    page_details = get_page_details(raw_story["url"])
+    %{
+      :id => raw_story["id"],
+      :url => raw_story["url"],
+      :title => raw_story["title"],
+      :score => raw_story["score"],
+      :type => raw_story["type"],
+      :time => raw_story["time"],
+      :author => raw_story["by"],
+      :page => %{
+        :image => page_details.image,
+        :description => page_details.description,
+        :tags => page_details.tags
+      }
+    }
   end
 
   def pmap(collection, func) do
