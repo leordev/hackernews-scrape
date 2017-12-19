@@ -8,6 +8,6 @@ defmodule HnScraperWeb.Router do
   scope "/", HnScraperWeb do
     pipe_through :api
 
-    get "/top/:count", StoriesController, :top
+    get "/top", StoriesController, :top
   end
 end

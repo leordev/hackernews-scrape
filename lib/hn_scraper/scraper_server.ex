@@ -7,7 +7,8 @@ defmodule HnScraper.ScraperServer do
   end
 
   def init(_) do
-    {:ok, %{status: :resting, stories: []}}
+    stories = Scraper.scrap_top(30)
+    {:ok, %{status: :resting, stories: stories, time: System.os_time}}
   end
 
   def update(pid, count \\ 100) do

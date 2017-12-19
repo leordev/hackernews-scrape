@@ -10,7 +10,7 @@ defmodule HnScraper.Scraper do
     IO.puts(">>>> getting story " <> story_id)
     url = "https://hacker-news.firebaseio.com/v0/item/"
       <> story_id <> ".json"
-    %{body: story} = HTTPotion.get url
+    %{body: story} = HTTPotion.get url, [timeout: 30_000]
     Poison.decode!(story)
   end
 
@@ -19,7 +19,7 @@ defmodule HnScraper.Scraper do
     try do
       Scrape.article(url)
     rescue
-      CaseClauseError -> nil
+      CaseClauseError -> %{image: nil, description: nil, tags: nil}
     end
   end
 
