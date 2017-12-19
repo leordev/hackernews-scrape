@@ -10,6 +10,7 @@ defmodule HnScraper.Application do
     children = [
       # Start the endpoint when the application starts
       supervisor(HnScraperWeb.Endpoint, []),
+      worker(HnScraper.ScraperServer, [[name: Stories]])
       # Start your own worker by calling: HnScraper.Worker.start_link(arg1, arg2, arg3)
       # worker(HnScraper.Worker, [arg1, arg2, arg3]),
     ]
