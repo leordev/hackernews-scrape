@@ -7,11 +7,12 @@ defmodule HnScraper.ScraperServer do
   end
 
   def init(_) do
-    stories = Scraper.scrap_top(30)
-    {:ok, %{status: :resting, stories: stories, time: System.os_time}}
+    #stories = Scraper.scrap_top(30)
+    schedule_work()
+    {:ok, %{status: :resting, stories: [], time: nil}}
   end
 
-  def update(pid, count \\ 100) do
+  def update(pid, count \\ 30) do
     GenServer.cast(pid, {:update, count})
   end
 
@@ -23,6 +24,12 @@ defmodule HnScraper.ScraperServer do
     GenServer.call(pid, :get_stories)
   end
 
+  def handle_info(:perform_scrape, state) do
+    update(self())
+    schedule_work()
+    {:noreply, %{status: :scraping, stories: state.stories, time: state.time}}
+  end
+
   def handle_call(:get_status, _from, state) do
     {:reply, {:ok, state.status}, state}
   end
@@ -31,7 +38,11 @@ defmodule HnScraper.ScraperServer do
     {:reply, {:ok, state.stories}, state}
   end
 
-  def handle_cast({:update, count}, _state) do
-    {:noreply, %{status: :resting, stories: Scraper.scrap_top(count)}}
+  def handle_cast({:update, count}, state) do
+    {:noreply, %{status: :resting, stories: Scraper.scrap_top(state.stories, count), time: System.os_time}}
+  end
+
+  def schedule_work() do
+    Process.send_after(self(), :perform_scrape, 60_000)
   end
 end

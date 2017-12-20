@@ -36,6 +36,8 @@ defmodule HnScraperWeb.Endpoint do
     key: "_hn_scraper_key",
     signing_salt: "MPQhxqlR"
 
+  plug CORSPlug
+
   plug HnScraperWeb.Router
 
   @doc """

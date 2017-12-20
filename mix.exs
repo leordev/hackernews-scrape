@@ -34,6 +34,7 @@ defmodule HnScraper.Mixfile do
     [
       {:httpotion, "~> 3.0.2"},
       {:scrape, "~> 1.2"},
+      {:cors_plug, "~> 1.2"},
       {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:gettext, "~> 0.11"},
